@@ -9,13 +9,14 @@ test('completing a quest awards XP, levels up and unlocks achievements', async (
   await expect(sheet).toContainText('For “Read”');
   await sheet.getByRole('button', { name: /^log 15m/i }).click();
 
-  // Quest complete toast, then the level-up celebration (+50 coins).
-  await expect(page.getByRole('status').filter({ hasText: /quest complete/i })).toBeVisible();
+  // The level-up celebration (+50 coins) comes first; toasts wait until it is closed.
   const levelUp = page.getByRole('dialog', { name: /level up! you reached level 2/i });
   await expect(levelUp).toBeVisible();
   await expect(levelUp).toContainText(/\+50 coins/i);
+  await expect(page.getByRole('status').filter({ hasText: /quest complete/i })).toHaveCount(0);
   await levelUp.getByRole('button', { name: 'Continue' }).click();
   await dismissCelebrations(page);
+  await expect(page.getByRole('status').filter({ hasText: /quest complete/i })).toBeVisible();
 
   await expect(page.getByRole('article', { name: 'Read, completed' })).toBeVisible();
   expect(await totalXP(page)).toBeGreaterThanOrEqual(100);
@@ -39,6 +40,7 @@ test('reaching the daily goal pays a bonus', async ({ page }) => {
   await expect(page.getByText(/daily goal complete/i)).toHaveCount(0);
   // ~126 XP more (with a small momentum bonus) crosses the 200 XP goal.
   await logActivity(page, { category: 'Coding', minutes: 120 });
+  await dismissCelebrations(page);
   await expect(page.getByRole('status').filter({ hasText: /daily goal complete/i })).toBeVisible();
   await dismissCelebrations(page);
   await page.goto('#/progress/history');
@@ -63,6 +65,7 @@ test('custom quests are created with honest XP limits and can be completed', asy
   const quest = page.getByRole('article', { name: 'Drink water' });
   await expect(quest).toContainText('+60 XP');
   await quest.getByRole('button', { name: /complete/i }).click();
+  await dismissCelebrations(page);
   await expect(page.getByRole('status').filter({ hasText: /quest complete/i })).toBeVisible();
 });
 
@@ -96,4 +99,14 @@ test('keyboard shortcuts open the log sheet and navigate', async ({ page, isMobi
   await expect(page.getByRole('dialog', { name: /log activity/i })).toBeHidden();
   await page.keyboard.press('3');
   await expect(page).toHaveURL(/#\/progress/);
+});
+
+test('the back button closes an open sheet', async ({ page }) => {
+  await onboard(page);
+  await page.goto('#/quests');
+  await page.getByRole('button', { name: /create quest/i }).first().click();
+  const sheet = page.getByRole('dialog', { name: /create quest/i });
+  await expect(sheet).toBeVisible();
+  await page.goBack();
+  await expect(sheet).toBeHidden();
 });

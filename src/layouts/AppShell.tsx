@@ -43,7 +43,7 @@ function DemoBanner() {
   const exitDemo = useGameStore((s) => s.exitDemo);
   if (mode !== 'demo') return null;
   return (
-    <div className="mb-5 flex items-center gap-3 rounded-2xl border border-accent/30 bg-accent/10 px-4 py-2.5 text-[13px] text-fg">
+    <div data-demo-banner className="mb-5 flex items-center gap-3 rounded-2xl border border-accent/30 bg-accent/10 px-4 py-2.5 text-[13px] text-fg">
       <span className="font-display text-[11px] font-semibold tracking-[0.18em] text-accent-ink uppercase">Demo</span>
       <span className="min-w-0 flex-1 truncate text-muted">You’re exploring a sample hero. Changes aren’t kept.</span>
       <button

@@ -15,7 +15,7 @@ import { CoinIcon, LevelBadge, StreakFlame } from '@/components/game/Hud';
 import { Button } from '@/components/ui/Button';
 import { NumberTicker } from '@/components/ui/Display';
 import { Icon } from '@/components/ui/Icon';
-import { useFocusTrap } from '@/components/ui/Overlay';
+import { useFocusTrap, useOverlayLayer } from '@/components/ui/Overlay';
 import { rankFor } from '@/components/game/rank';
 
 const LEVEL_LINES = [
@@ -47,13 +47,7 @@ function Backdrop({ tone }: { tone: string }) {
 function Shell({ children, tone, label, onClose }: { children: React.ReactNode; tone: string; label: string; onClose: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   useFocusTrap(ref, true);
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [onClose]);
+  useOverlayLayer(true, onClose);
   return (
     <m.div className="fixed inset-0 z-[80] grid place-items-center p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.25 } }}>
       <Backdrop tone={tone} />

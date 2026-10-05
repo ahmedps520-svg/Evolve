@@ -11,7 +11,7 @@ import { Input } from './Field';
 
 const stack: symbol[] = [];
 
-function useOverlayLayer(open: boolean, onClose: () => void) {
+export function useOverlayLayer(open: boolean, onClose: () => void) {
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
   useEffect(() => {

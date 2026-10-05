@@ -45,16 +45,21 @@ export function registerServiceWorker(): void {
       console.warn('Service worker registration failed', error);
     }
   });
+  // Reload only when the player chose to update. On the very first visit the new worker also takes
+  // control (clients.claim), and reloading then would throw away whatever they were doing.
   let reloading = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (reloading) return;
+    if (reloading || !updateRequested) return;
     reloading = true;
     location.reload();
   });
 }
 
+let updateRequested = false;
+
 export function applyUpdate(): void {
   const reg = usePwa.getState().registration;
+  updateRequested = true;
   if (reg?.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
   else location.reload();
 }

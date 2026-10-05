@@ -123,13 +123,13 @@ const ToastView = memo(function ToastView({ t }: { t: Toast }) {
 
 export function Toaster() {
   const toasts = useUI((s) => s.toasts);
+  // Hold toasts while a celebration is on screen; they appear (with fresh timers) once it closes.
+  const holding = useUI((s) => s.celebrations.length > 0);
   return (
     <div aria-live="polite" aria-atomic="false" className="pointer-events-none fixed inset-x-0 top-0 z-[95] flex justify-center px-3 pt-[calc(var(--safe-top)+0.75rem)] lg:justify-end lg:px-6 lg:pt-6">
       <div className="flex w-full max-w-md flex-col gap-2">
         <AnimatePresence initial={false}>
-          {toasts.map((t) => (
-            <ToastView key={t.id} t={t} />
-          ))}
+          {!holding && toasts.map((t) => <ToastView key={t.id} t={t} />)}
         </AnimatePresence>
       </div>
     </div>

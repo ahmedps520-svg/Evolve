@@ -18,6 +18,12 @@ export function SheetHost() {
   useEffect(() => {
     if (sheet) last.current = sheet;
   }, [sheet]);
+  // Browser/OS back closes an open sheet instead of leaving it over a different page.
+  useEffect(() => {
+    if (!sheet) return;
+    window.addEventListener('popstate', close);
+    return () => window.removeEventListener('popstate', close);
+  }, [sheet, close]);
   const current = sheet ?? last.current;
   const isOpen = (t: Sheet['type']) => sheet?.type === t;
 

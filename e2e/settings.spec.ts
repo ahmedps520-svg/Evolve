@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { onboard } from './helpers';
+import { dismissCelebrations, onboard } from './helpers';
 
 test('light and dark themes apply instantly and persist without a flash', async ({ page }) => {
   await onboard(page);
@@ -34,6 +34,7 @@ test.describe('with the system reduced-motion preference', () => {
     expect(duration).toBeLessThan(0.01);
     await page.getByRole('article', { name: 'Read' }).getByRole('button', { name: 'Log time for Read' }).click();
     await page.getByRole('dialog', { name: /log progress/i }).getByRole('button', { name: /^log 15m/i }).click();
+    await dismissCelebrations(page);
     await expect(page.getByRole('status').filter({ hasText: /quest complete/i })).toBeVisible();
   });
 });

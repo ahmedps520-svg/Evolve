@@ -45,11 +45,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       className={cn(
-        'relative inline-flex shrink-0 items-center justify-center font-semibold whitespace-nowrap transition-[transform,background-color,filter,color,border-color] duration-150 select-none active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45',
+        'relative inline-flex items-center justify-center font-semibold whitespace-nowrap transition-[transform,background-color,filter,color,border-color] duration-150 select-none active:scale-[0.97] disabled:pointer-events-none disabled:opacity-45',
         VARIANTS[variant],
         SIZES[size],
         cta && 'font-display tracking-[0.12em] uppercase',
-        block && 'w-full',
+        // Block buttons share a row evenly; inline buttons keep their size.
+        block ? 'w-full min-w-0' : 'shrink-0',
         className,
       )}
       {...rest}

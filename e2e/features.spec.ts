@@ -16,11 +16,14 @@ test('goals break into milestones that pay XP', async ({ page }) => {
   await sheet.getByRole('button', { name: /add milestone/i }).click();
   await sheet.getByRole('textbox', { name: 'Milestone 2', exact: true }).fill('Hold a 5-minute conversation');
   await sheet.getByRole('button', { name: /create goal|save goal|^create/i }).last().click();
-  // Creating a goal offers to turn it into quests — close the generator for now.
+  // Creating a goal offers to turn it into quests — it arrives pre-filled; close it for now.
   const generator = page.getByRole('dialog', { name: /quest generator/i });
-  if (await generator.isVisible().catch(() => false)) await page.keyboard.press('Escape');
-  await page.goto('#/quests/goals');
+  await expect(generator).toBeVisible();
+  await expect(generator.getByLabel('What do you want to get better at?')).toHaveValue('Learn Spanish');
+  await page.keyboard.press('Escape');
+  await expect(generator).toBeHidden();
   await page.getByRole('button', { name: /learn 100 words/i }).click();
+  await dismissCelebrations(page);
   await expect(page.getByRole('status').filter({ hasText: /milestone reached/i })).toBeVisible();
   await expect(page.getByRole('button', { name: /learn 100 words/i })).toHaveAttribute('aria-pressed', 'true');
 });
@@ -70,6 +73,7 @@ test('a rest day protects the streak and pays a little XP', async ({ page }) => 
   await page.getByRole('button', { name: /take a rest day/i }).click();
   const sheet = page.getByRole('dialog', { name: /rest day/i });
   await sheet.getByRole('button', { name: /take today off/i }).click();
+  await dismissCelebrations(page);
   await expect(page.getByRole('status').filter({ hasText: /rest day/i })).toBeVisible();
 });
 
@@ -100,7 +104,8 @@ test('the shop sells cosmetics for coins and the wardrobe equips them', async ({
   const frame = page.locator('[data-shop-item="frame:cyber"]');
   await frame.getByRole('button', { name: 'Buy' }).click();
   await page.getByRole('alertdialog', { name: /buy cyber frame/i }).getByRole('button', { name: 'Buy' }).click();
-  await expect(page.getByRole('status').filter({ hasText: /unlocked/i })).toBeVisible();
+  await dismissCelebrations(page);
+  await expect(page.getByRole('status').filter({ hasText: /unlocked/i }).first()).toBeVisible();
   await expect(frame.getByText('Owned')).toBeVisible();
   await expect(page.getByLabel('1,465 coins').filter({ visible: true }).first()).toBeVisible();
   await frame.getByRole('button', { name: 'Equip' }).click();

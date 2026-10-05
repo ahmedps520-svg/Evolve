@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "description": "Evolve — turn your real life into an RPG. Earn XP, level up, complete quests and keep streaks for real-world activities.",
   "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -12,7 +15,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "icons": "node scripts/generate-icons.mjs"
+    "icons": "node scripts/generate-icons.mjs",
+    "screenshots": "node scripts/capture-screenshots.mjs"
   },
   "dependencies": {
     "framer-motion": "^14.0.0",

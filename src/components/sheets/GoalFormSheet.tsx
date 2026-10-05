@@ -53,7 +53,9 @@ export default function GoalFormSheet({ open, onClose, sheet }: { open: boolean;
     onClose();
     if (!existing) {
       const created = res.state.goals.find((g) => !before.has(g.id));
-      if (created) setTimeout(() => openSheet({ type: 'generator', goalId: created.id, prompt: created.title }), 280);
+      // Offer to turn the goal into quests once this sheet has closed — unless the player has moved on.
+      const here = location.hash;
+      if (created) setTimeout(() => location.hash === here && !useUI.getState().sheet && openSheet({ type: 'generator', goalId: created.id, prompt: created.title }), 280);
     }
   };
 

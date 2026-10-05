@@ -32,3 +32,13 @@ test('the app works offline after the first visit', async ({ page, context }) =>
   await expect(page.getByText('days in a row')).toBeVisible();
   await context.setOffline(false);
 });
+
+test('the first visit is never reloaded when the service worker takes control', async ({ page }) => {
+  // Reloading would throw away whatever the player was doing (for example, half-finished onboarding).
+  let loads = 0;
+  page.on('load', () => loads++);
+  await page.goto('#/onboarding');
+  await page.waitForFunction(() => !!navigator.serviceWorker.controller, null, { timeout: 20_000 });
+  await page.waitForTimeout(1_000);
+  expect(loads).toBe(1);
+});

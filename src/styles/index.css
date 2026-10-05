@@ -428,9 +428,12 @@
 }
 
 @utility glass {
-  background: color-mix(in oklab, var(--bg) 78%, transparent);
+  background: color-mix(in oklab, var(--bg) 88%, transparent);
   backdrop-filter: saturate(160%) blur(18px);
   -webkit-backdrop-filter: saturate(160%) blur(18px);
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    background: color-mix(in oklab, var(--bg) 97%, transparent);
+  }
 }
 
 @utility safe-px {
