@@ -382,6 +382,8 @@ export interface ActivityInput {
   timestamp?: number;
   questId?: string | null;
   source?: 'manual' | 'focus';
+  /** Count this activity toward matching quests on today's board (default true). */
+  autoProgress?: boolean;
 }
 
 /** XP for an activity after healthy daily limits: full rate to the soft cap, half to the hard cap, then none. */
@@ -411,8 +413,9 @@ export function previewActivityXP(state: GameState, input: Pick<ActivityInput, '
   return { base, level, before, effective };
 }
 
-function progressQuestsFromActivity(ctx: EngineContext, activity: Activity, multiplier: number): void {
+function progressQuestsFromActivity(ctx: EngineContext, activity: Activity, multiplier: number, auto: boolean): void {
   if (activity.dateKey !== ctx.today) return;
+  if (!auto && !activity.questId) return;
   const board = questsForToday(ctx.state.quests, ctx.today).filter((q) => q.status === 'active' && !q.completed);
   for (const q of board) {
     const explicit = activity.questId === q.id;
@@ -476,7 +479,7 @@ function logActivityInternal(ctx: EngineContext, input: ActivityInput): { ok: tr
   awardXP(ctx, baseXP, 'activity', label, { category: cat.id, refId: activity.id, dateKey, timestamp: ts });
   if (bonus) awardXP(ctx, bonus, 'momentum', `Momentum ×${multiplier.toFixed(2)}`, { category: cat.id, refId: activity.id, dateKey, timestamp: ts });
   if (level !== 'none') ctx.emit({ type: 'healthyCap', category: cat.id, level });
-  progressQuestsFromActivity(ctx, activity, multiplier);
+  progressQuestsFromActivity(ctx, activity, multiplier, input.autoProgress !== false);
   return { ok: true, activity };
 }
 

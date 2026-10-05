@@ -90,10 +90,10 @@ export interface Profile {
   createdAt: number;
 }
 
+/** XP_REQUIRED(level) = round(offset + base × level ^ exponent) */
 export interface CurveConfig {
-  /** XP for level 1 → 2. */
+  offset: number;
   base: number;
-  /** Growth exponent: XP_REQUIRED(level) = round(base × level^exponent). */
   exponent: number;
 }
 

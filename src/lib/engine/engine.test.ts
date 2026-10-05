@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { GameState } from '@/types';
 import { emptyState } from '@/data/defaults';
 import { addDays, diffDays, toDateKey, weekStart } from '@/lib/date';
-import { calculateLevel, calculateRequiredXP, calculateXPProgress, totalXPForLevel } from '@/lib/xp';
+import { DEFAULT_CURVE, calculateLevel, calculateRequiredXP, calculateXPProgress, totalXPForLevel } from '@/lib/xp';
 import {
   activeEvents,
   canTakeRestDay,
@@ -41,10 +41,16 @@ function onboard(now = at(2026, 10, 5, 9), difficulty: 'casual' | 'normal' | 'ha
 }
 
 describe('level curve', () => {
-  it('follows XP_REQUIRED = round(100 × level^1.35)', () => {
+  it('follows XP_REQUIRED = round(40 + 60 × level^1.1) and starts at 100 XP', () => {
     expect(calculateRequiredXP(1)).toBe(100);
-    expect(calculateRequiredXP(2)).toBe(Math.round(100 * 2 ** 1.35));
-    expect(calculateRequiredXP(12)).toBe(Math.round(100 * 12 ** 1.35));
+    expect(calculateRequiredXP(2)).toBe(Math.round(40 + 60 * 2 ** 1.1));
+    expect(calculateRequiredXP(12)).toBe(Math.round(40 + 60 * 12 ** 1.1));
+    // The classic preset reproduces the original brief's example formula.
+    expect(calculateRequiredXP(3, { offset: 0, base: 100, exponent: 1.35 })).toBe(Math.round(100 * 3 ** 1.35));
+  });
+
+  it('puts the demo hero (12,480 XP) at Level 18', () => {
+    expect(calculateLevel(12_480)).toBe(18);
   });
 
   it('maps total XP to levels and progress', () => {
@@ -318,7 +324,10 @@ describe('weekly challenges', () => {
     const boss = s.weeklies[0].challenges[0];
     expect(claimWeekly(s, boss.id, at(2026, 10, 5, 10)).error).toBeTruthy();
     for (let i = 0; i < 6; i++) {
+      // ~444 XP of activity per day, independent of which daily quests were dealt.
       s = logActivity(s, { category: 'study', duration: 240 }, at(2026, 10, 5 + i, 10)).state;
+      s = logActivity(s, { category: 'exercise', duration: 90 }, at(2026, 10, 5 + i, 15)).state;
+      s = logActivity(s, { category: 'reading', duration: 120 }, at(2026, 10, 5 + i, 19)).state;
       s = syncDay(s, at(2026, 10, 6 + i, 8)).state;
     }
     expect(challengeProgress(s, s.weeklies[0].weekKey, boss)).toBeGreaterThanOrEqual(boss.target);
@@ -354,9 +363,9 @@ describe('level coins and curve changes', () => {
     s = logActivity(s, { category: 'study', duration: 240 }, at(2026, 10, 5, 12)).state;
     const level = s.profile!.level;
     const coins = s.profile!.coins;
-    s = updateSettings(s, { xp: { curve: { base: 100, exponent: 2 } } }, at(2026, 10, 5, 13)).state;
-    expect(s.profile!.level).toBeLessThanOrEqual(level);
-    s = updateSettings(s, { xp: { curve: { base: 100, exponent: 1.35 } } }, at(2026, 10, 5, 13)).state;
+    s = updateSettings(s, { xp: { curve: { offset: 0, base: 200, exponent: 2 } } }, at(2026, 10, 5, 13)).state;
+    expect(s.profile!.level).toBeLessThan(level);
+    s = updateSettings(s, { xp: { curve: { ...DEFAULT_CURVE } } }, at(2026, 10, 5, 13)).state;
     expect(s.profile!.level).toBe(level);
     expect(s.profile!.coins).toBe(coins);
   });
