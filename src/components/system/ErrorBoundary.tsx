@@ -37,7 +37,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <h1 className="mt-5 font-display text-xl font-semibold tracking-wide text-fg">Something went wrong.</h1>
           <p className="mt-2 text-sm text-muted">Your progress is safe. Try again.</p>
           <div className="mt-6 flex justify-center gap-3">
-            <button type="button" onClick={() => this.setState({ error: null })} className="h-11 rounded-xl bg-accent px-5 font-display text-sm font-semibold tracking-[0.1em] text-accent-fg uppercase">
+            <button type="button" onClick={() => this.setState({ error: null })} className="h-11 rounded-xl bg-accent-fill px-5 font-display text-sm font-semibold tracking-[0.1em] text-accent-fg uppercase">
               Try again
             </button>
             <button type="button" onClick={() => location.reload()} className="h-11 rounded-xl border border-line bg-surface-3 px-5 text-sm font-semibold text-fg">

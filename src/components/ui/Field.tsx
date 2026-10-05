@@ -112,17 +112,19 @@ export function Segmented<T extends string>({ value, onChange, options, label, s
 }
 
 export function Slider({ value, onChange, min, max, step = 1, label, format, id }: { value: number; onChange: (v: number) => void; min: number; max: number; step?: number; label: string; format?: (v: number) => string; id?: string }) {
+  const autoId = useId();
+  const sid = id ?? autoId;
   const pct = ((value - min) / (max - min)) * 100;
   return (
     <div className="space-y-2">
       <div className="flex items-baseline justify-between">
-        <label htmlFor={id} className="text-[13px] font-medium text-fg">
+        <label htmlFor={sid} className="text-[13px] font-medium text-fg">
           {label}
         </label>
         <span className="num font-display text-sm font-semibold text-fg">{format ? format(value) : value}</span>
       </div>
       <input
-        id={id}
+        id={sid}
         type="range"
         min={min}
         max={max}

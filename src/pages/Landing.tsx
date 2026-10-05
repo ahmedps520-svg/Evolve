@@ -86,7 +86,7 @@ function MockDashboard() {
                     <Icon name="check" size={13} /> COMPLETED
                   </span>
                 ) : (
-                  <span className="flex h-8 items-center gap-1.5 rounded-lg bg-accent px-3 font-display text-[10px] font-semibold tracking-[0.12em] text-accent-fg">
+                  <span className="flex h-8 items-center gap-1.5 rounded-lg bg-accent-fill px-3 font-display text-[10px] font-semibold tracking-[0.12em] text-accent-fg">
                     <Icon name="play" size={12} /> START
                   </span>
                 )}
@@ -217,7 +217,7 @@ export default function Landing() {
                   <span className="grid size-11 place-items-center rounded-[14px] bg-accent/14 text-accent-ink">
                     <Icon name={s.icon} size={20} />
                   </span>
-                  <span className="font-display text-3xl font-bold text-line-strong">0{i + 1}</span>
+                  <span className="font-display text-3xl font-bold text-faint" aria-hidden>0{i + 1}</span>
                 </div>
                 <h3 className="mt-4 font-display text-base font-bold tracking-wide text-fg">{s.title}</h3>
                 <p className="mt-1.5 text-sm text-muted">{s.text}</p>

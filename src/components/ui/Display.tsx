@@ -170,7 +170,7 @@ export function Tabs<T extends string>({ items, value, onChange, label, classNam
             {active && <m.span layoutId={`tab-${label}`} className="absolute inset-0 rounded-full border border-line-strong bg-surface-3" transition={{ type: 'spring', stiffness: 500, damping: 40 }} />}
             {t.icon && <Icon name={t.icon} size={16} className="relative" />}
             <span className="relative">{t.label}</span>
-            {!!t.badge && <span className="relative grid min-w-5 place-items-center rounded-full bg-accent px-1.5 text-[11px] font-bold text-accent-fg">{t.badge}</span>}
+            {!!t.badge && <span className="relative grid min-w-5 place-items-center rounded-full bg-accent-fill px-1.5 text-[11px] font-bold text-accent-fg">{t.badge}</span>}
           </button>
         );
       })}

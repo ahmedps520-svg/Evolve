@@ -214,7 +214,7 @@ function WeeklyTab() {
               return (
                 <li key={w.id} className="flex items-center gap-3 px-4 py-3 text-sm">
                   <span className="flex-1 text-fg">Week of {formatDay(w.weekKey, { month: 'short', day: 'numeric' })}</span>
-                  <span className="flex gap-1" aria-label={`${cleared} of ${w.challenges.length} cleared`}>
+                  <span className="flex gap-1" role="img" aria-label={`${cleared} of ${w.challenges.length} cleared`}>
                     {w.challenges.map((c) => (
                       <span key={c.id} className={cn('size-2.5 rotate-45 rounded-[2px]', c.claimed ? 'bg-success' : 'bg-surface-4')} />
                     ))}

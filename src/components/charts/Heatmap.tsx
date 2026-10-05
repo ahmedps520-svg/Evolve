@@ -64,7 +64,8 @@ export function StreakCalendar({ days, today, weeks = 26, goal, weekStartsOn, ce
 
   return (
     <div className="relative">
-      <div ref={scroller} className="no-scrollbar overflow-x-auto">
+      {/* Focusable so keyboard users can scroll back through the year on narrow screens. */}
+      <div ref={scroller} className="no-scrollbar overflow-x-auto rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-accent" tabIndex={0} role="region" aria-label="Activity calendar, scrollable">
         <svg width={width} height={height} role="img" aria-label={`Activity calendar for the last ${weeks} weeks: ${totalActive} active days.`} className="block">
           {months.map((m) => (
             <text key={m.x} x={m.x} y={10} className="fill-[var(--faint)] text-[10px]">
@@ -112,7 +113,7 @@ export function StreakCalendar({ days, today, weeks = 26, goal, weekStartsOn, ce
         <span className="flex items-center gap-1.5">
           Less
           {HEAT_COLORS.slice(0, 4).map((c, i) => (
-            <span key={i} className="size-[11px] rounded-[3px]" style={{ background: c }} aria-label={HEAT_LABELS[i]} />
+            <span key={i} role="img" className="size-[11px] rounded-[3px]" style={{ background: c }} aria-label={HEAT_LABELS[i]} />
           ))}
           More
         </span>

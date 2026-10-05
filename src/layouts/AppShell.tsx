@@ -219,7 +219,7 @@ function Fab() {
       onClick={() => openSheet({ type: 'log' })}
       aria-label="Log activity"
       whileTap={{ scale: 0.92 }}
-      className="fixed right-4 bottom-[calc(var(--safe-bottom)+5rem)] z-30 grid size-14 place-items-center rounded-2xl bg-accent text-accent-fg shadow-[0_14px_32px_-10px_var(--accent)] lg:hidden"
+      className="fixed right-4 bottom-[calc(var(--safe-bottom)+5rem)] z-30 grid size-14 place-items-center rounded-2xl bg-accent-fill text-accent-fg shadow-[0_14px_32px_-10px_var(--accent)] lg:hidden"
     >
       <Icon name="plus" size={26} strokeWidth={2.4} />
     </m.button>
@@ -234,7 +234,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-dvh">
       <div className="app-backdrop" aria-hidden />
-      <a href="#main" onClick={(e) => { e.preventDefault(); document.getElementById('main')?.focus(); }} className="sr-only z-[100] rounded-lg bg-accent px-4 py-2 text-accent-fg focus:not-sr-only focus:fixed focus:top-3 focus:left-3">
+      <a href="#main" onClick={(e) => { e.preventDefault(); document.getElementById('main')?.focus(); }} className="sr-only z-[100] rounded-lg bg-accent-fill px-4 py-2 text-accent-fg focus:not-sr-only focus:fixed focus:top-3 focus:left-3">
         Skip to content
       </a>
       <Sidebar active={active} />

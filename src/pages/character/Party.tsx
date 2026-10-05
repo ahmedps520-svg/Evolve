@@ -32,7 +32,7 @@ interface Row {
   note: string | null;
 }
 
-const PLACE_COLOR = ['var(--rarity-legendary)', 'var(--rarity-common)', '#d98a4e'];
+const PLACE_COLOR = ['var(--rarity-legendary)', 'var(--rarity-common)', 'var(--bronze)'];
 
 function OptIn() {
   return (

@@ -50,6 +50,7 @@ fully offline, and keeps everything on your device.
 - **Accessibility.**
   - Full keyboard support: shortcuts `L` log, `N` new quest, `F` focus, `1`–`5` to navigate.
   - Labelled controls, focus traps and live regions.
+  - WCAG AA text contrast in every theme.
   - Reduced-motion and high-contrast modes.
   - Information is never carried by color alone.
 - **Settings.** Profile, theme (dark, light, auto), accent themes, motion, intense effects, sound, haptics, notifications, difficulty, daily goal, week start and the XP system. Also privacy, JSON export and import, storage protection, and a reset that requires typing `RESET`.
@@ -141,7 +142,8 @@ before anything is replaced. You can also restore from the first onboarding scre
   - the quest generator, journal photos, rest days, party codes and challenges, and the shop and wardrobe;
   - persistence across reloads, export, reset and import;
   - dark and light themes, high contrast, and both forced and system reduced motion;
-  - offline use, manifest validity, keyboard shortcuts, and responsive layouts (no sideways scrolling on phone, tablet or desktop).
+  - offline use, manifest validity, keyboard shortcuts, and responsive layouts (no sideways scrolling on phone, tablet or desktop);
+  - an automated accessibility audit (axe-core, WCAG 2.1 AA) of every screen in dark and light themes.
 
 ## License
 

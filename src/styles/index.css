@@ -60,6 +60,7 @@
   --color-accent: var(--accent);
   --color-accent-2: var(--accent-2);
   --color-accent-fg: var(--accent-fg);
+  --color-accent-fill: var(--accent-fill);
   --color-accent-ink: var(--accent-ink);
   --color-coin: var(--coin);
   --color-success: var(--success);
@@ -99,7 +100,9 @@
   --line-strong: rgb(255 255 255 / 0.12);
   --fg: #eef0f6;
   --muted: #9aa2b4;
-  --faint: #6b7385;
+  /* Secondary text still meets WCAG AA (4.5:1) on every surface. */
+  --faint: #858d9f;
+  --bronze: #d98a4e;
 
   --coin: #f5c451;
   --success: #3ddc97;
@@ -142,18 +145,19 @@
   --line-strong: rgb(12 14 22 / 0.15);
   --fg: #0c0f16;
   --muted: #545c6c;
-  --faint: #858c9b;
+  --faint: #646b7a;
+  --bronze: #a0582a;
 
-  --coin: #b97d06;
-  --success: #0e8f5a;
+  --coin: #8f6100;
+  --success: #0a6e45;
   --warning: #b45309;
   --danger: #dc2f45;
 
-  --rarity-common: #6b7280;
-  --rarity-uncommon: #16a34a;
+  --rarity-common: #5f6675;
+  --rarity-uncommon: #15803d;
   --rarity-rare: #2563eb;
   --rarity-epic: #9333ea;
-  --rarity-legendary: #d97706;
+  --rarity-legendary: #b45309;
   --rarity-mythic: #e11d48;
 
   /* Attribute groups — validated categorical palette (light steps) */
@@ -176,12 +180,15 @@
   --accent-2: #4fa3ff;
   --accent-fg: #ffffff;
   --accent-ink: #a89dff;
+  /* Solid fills that carry text (buttons, badges) keep ≥ 4.5:1 with --accent-fg. */
+  --accent-fill: #6c5ce7;
 }
 .light[data-accent='electric'],
 .light:not([data-accent]) {
   --accent: #5b47e8;
   --accent-2: #2f7de1;
   --accent-ink: #4a36d6;
+  --accent-fill: #5b47e8;
 }
 
 [data-accent='cyan'] {
@@ -189,12 +196,14 @@
   --accent-2: #60a5fa;
   --accent-fg: #04161c;
   --accent-ink: #5ee3f6;
+  --accent-fill: #22d3ee;
 }
 .light[data-accent='cyan'] {
   --accent: #0891b2;
   --accent-2: #2563eb;
   --accent-fg: #ffffff;
   --accent-ink: #0e7490;
+  --accent-fill: #0e7490;
 }
 
 [data-accent='emerald'] {
@@ -202,12 +211,14 @@
   --accent-2: #22d3ee;
   --accent-fg: #03170f;
   --accent-ink: #6ee7b7;
+  --accent-fill: #34d399;
 }
 .light[data-accent='emerald'] {
   --accent: #059669;
   --accent-2: #0891b2;
   --accent-fg: #ffffff;
   --accent-ink: #047857;
+  --accent-fill: #047857;
 }
 
 [data-accent='amber'] {
@@ -215,12 +226,14 @@
   --accent-2: #fb923c;
   --accent-fg: #1c1302;
   --accent-ink: #fcd34d;
+  --accent-fill: #fbbf24;
 }
 .light[data-accent='amber'] {
   --accent: #d97706;
   --accent-2: #ea580c;
   --accent-fg: #ffffff;
   --accent-ink: #b45309;
+  --accent-fill: #b45309;
 }
 
 [data-accent='crimson'] {
@@ -228,11 +241,13 @@
   --accent-2: #fb923c;
   --accent-fg: #ffffff;
   --accent-ink: #fd8a9c;
+  --accent-fill: #e11d48;
 }
 .light[data-accent='crimson'] {
   --accent: #e11d48;
   --accent-2: #ea580c;
   --accent-ink: #be123c;
+  --accent-fill: #e11d48;
 }
 
 [data-accent='violet'] {
@@ -240,12 +255,14 @@
   --accent-2: #f472b6;
   --accent-fg: #1a0526;
   --accent-ink: #d8b4fe;
+  --accent-fill: #c084fc;
 }
 .light[data-accent='violet'] {
   --accent: #9333ea;
   --accent-2: #db2777;
   --accent-fg: #ffffff;
   --accent-ink: #7e22ce;
+  --accent-fill: #9333ea;
 }
 
 /* Premium themes (shop) */
@@ -254,6 +271,7 @@
   --accent-2: #e8a33c;
   --accent-fg: #1d1404;
   --accent-ink: #f6d58f;
+  --accent-fill: #f2c66d;
 }
 .dark[data-accent='aurum'] {
   --bg: #080705;
@@ -267,6 +285,7 @@
   --accent-2: #c2410c;
   --accent-fg: #ffffff;
   --accent-ink: #92600f;
+  --accent-fill: #92600f;
 }
 
 [data-accent='synth'] {
@@ -274,6 +293,7 @@
   --accent-2: #22d3ee;
   --accent-fg: #1f0414;
   --accent-ink: #f9a8d4;
+  --accent-fill: #f472b6;
 }
 .dark[data-accent='synth'] {
   --bg: #07050c;
@@ -287,6 +307,7 @@
   --accent-2: #0891b2;
   --accent-fg: #ffffff;
   --accent-ink: #be185d;
+  --accent-fill: #be185d;
 }
 
 [data-accent='mono'] {
@@ -294,12 +315,14 @@
   --accent-2: #9aa2b4;
   --accent-fg: #0b0d12;
   --accent-ink: #f4f5f8;
+  --accent-fill: #e7e9ee;
 }
 .light[data-accent='mono'] {
   --accent: #1f2430;
   --accent-2: #545c6c;
   --accent-fg: #ffffff;
   --accent-ink: #1f2430;
+  --accent-fill: #1f2430;
 }
 
 /* High contrast: stronger separation, brighter secondary text, no translucency tricks. */
