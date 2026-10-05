@@ -1,12 +1,14 @@
-import { LazyMotion, MotionConfig } from 'framer-motion';
+import { LazyMotion, MotionConfig, domMax } from 'framer-motion';
 import type { ReactNode } from 'react';
 
-const loadFeatures = () => import('./motionFeatures').then((m) => m.default);
-
-/** Motion features load in their own chunk; components use the lightweight `m` primitives. */
+/**
+ * Motion features ship with the app shell. Loading them lazily saves a few KB but lets a fast tap
+ * land before exit animations can run, which would leave `AnimatePresence` waiting forever.
+ * Components use the lightweight `m` primitives.
+ */
 export function MotionProvider({ motion, children }: { motion: 'system' | 'reduced' | 'full'; children: ReactNode }) {
   return (
-    <LazyMotion features={loadFeatures} strict>
+    <LazyMotion features={domMax} strict>
       <MotionConfig reducedMotion={motion === 'reduced' ? 'always' : motion === 'full' ? 'never' : 'user'}>{children}</MotionConfig>
     </LazyMotion>
   );

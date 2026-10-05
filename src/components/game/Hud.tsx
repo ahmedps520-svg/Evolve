@@ -1,4 +1,5 @@
-import { AnimatePresence, m, useAnimationControls } from 'framer-motion';
+import { AnimatePresence, m, type Transition } from 'framer-motion';
+import { easeOut } from '@/lib/motion';
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/cn';
 import { formatNumber } from '@/lib/format';
@@ -36,10 +37,12 @@ export function LevelBadge({ level, size = 40, className }: { level: number; siz
 export function XPBar({ percent, level, className, height = 10, registerTarget = false, showTicks = true }: { percent: number; level: number; className?: string; height?: number; registerTarget?: boolean; showTicks?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const pulse = useUI((s) => s.hudPulse);
-  const controls = useAnimationControls();
-  const flash = useAnimationControls();
-  const prevLevel = useRef(level);
-  const mounted = useRef(false);
+  const [flash, setFlash] = useState({ n: 0, peak: 0, delay: 0 });
+  const target = `${Math.max(0, Math.min(1, percent)) * 100}%`;
+  // Declarative so the first paint is correct even before the lazily loaded motion features arrive.
+  const initialWidth = useRef(target).current;
+  const [fill, setFill] = useState<{ width: string | (string | null)[]; transition: Transition }>({ width: target, transition: { duration: 0 } });
+  const prev = useRef({ level, target });
 
   useLayoutEffect(() => {
     if (!registerTarget || !ref.current) return;
@@ -47,29 +50,25 @@ export function XPBar({ percent, level, className, height = 10, registerTarget =
   }, [registerTarget]);
 
   useEffect(() => {
-    const target = `${Math.max(0, Math.min(1, percent)) * 100}%`;
-    if (!mounted.current) {
-      mounted.current = true;
-      controls.set({ width: target });
-      return;
-    }
-    if (level > prevLevel.current) {
+    const p = prev.current;
+    if (p.level === level && p.target === target) return;
+    if (level > p.level) {
       // Fill to the brim, flash, then continue into the new level.
-      void (async () => {
-        await controls.start({ width: '100%', transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] } });
-        void flash.start({ opacity: [0, 0.9, 0], transition: { duration: 0.6 } });
-        controls.set({ width: '0%' });
-        await controls.start({ width: target, transition: { type: 'spring', stiffness: 90, damping: 20 } });
-      })();
+      setFill({ width: [null, '100%', '100%', '0%', target], transition: { duration: 1.5, times: [0, 0.3, 0.42, 0.43, 1], ease: [easeOut, 'linear', 'linear', easeOut] } });
+      setFlash((f) => ({ n: f.n + 1, peak: 0.9, delay: 0.4 }));
     } else {
-      void controls.start({ width: target, transition: { type: 'spring', stiffness: 90, damping: 20, delay: 0.25 } });
+      setFill({ width: target, transition: { type: 'spring', stiffness: 90, damping: 20, delay: 0.25 } });
     }
-    prevLevel.current = level;
-  }, [percent, level, controls, flash]);
+    prev.current = { level, target };
+  }, [level, target]);
 
+  // Flash when XP lands on the bar — but not when the bar first mounts.
+  const lastPulse = useRef(pulse);
   useEffect(() => {
-    if (pulse) void flash.start({ opacity: [0, 0.55, 0], transition: { duration: 0.7, delay: 0.35 } });
-  }, [pulse, flash]);
+    if (pulse === lastPulse.current) return;
+    lastPulse.current = pulse;
+    setFlash((f) => ({ n: f.n + 1, peak: 0.55, delay: 0.35 }));
+  }, [pulse]);
 
   return (
     <div
@@ -82,7 +81,7 @@ export function XPBar({ percent, level, className, height = 10, registerTarget =
       aria-valuemax={100}
       aria-valuenow={Math.round(percent * 100)}
     >
-      <m.div className="xp-fill absolute inset-y-0 left-0 rounded-full" initial={false} animate={controls} />
+      <m.div className="xp-fill absolute inset-y-0 left-0 rounded-full" initial={{ width: initialWidth }} animate={{ width: fill.width }} transition={fill.transition} />
       {showTicks && (
         <div
           className="pointer-events-none absolute inset-0"
@@ -90,7 +89,14 @@ export function XPBar({ percent, level, className, height = 10, registerTarget =
           aria-hidden
         />
       )}
-      <m.div className="pointer-events-none absolute inset-0 rounded-full bg-white" initial={{ opacity: 0 }} animate={flash} aria-hidden />
+      <m.div
+        key={flash.n}
+        className="pointer-events-none absolute inset-0 rounded-full bg-white"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: flash.n ? [0, flash.peak, 0] : 0 }}
+        transition={{ duration: 0.65, delay: flash.delay }}
+        aria-hidden
+      />
     </div>
   );
 }
