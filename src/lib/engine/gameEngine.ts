@@ -189,6 +189,7 @@ export function sanitizeName(name: string): string {
 }
 
 export function completeOnboarding(state: GameState, input: OnboardingInput, now: number): EngineResult {
+  if (state.profile) return noop(state, 'Your character already exists.');
   const today = toDateKey(now);
   const difficulty: GameDifficulty = input.difficulty in GAME_DIFFICULTY_MAP ? input.difficulty : 'normal';
   const classId: ClassId = isClassId(input.classId) ? input.classId : 'balanced';
@@ -1164,6 +1165,12 @@ export function dismissTip(state: GameState, id: string): EngineResult {
   return { state: { ...state, meta: { ...state.meta, dismissed: [...state.meta.dismissed, id] } }, events: [] };
 }
 
-export function recordNotification(state: GameState, type: string, key: string): EngineResult {
-  return { state: { ...state, meta: { ...state.meta, notificationLog: { ...state.meta.notificationLog, [type]: key } } }, events: [] };
+export function recordNotification(state: GameState, type: string, key: string, now: number): EngineResult {
+  const today = toDateKey(now);
+  const log: Record<string, string> = {};
+  // Keep only today's counter; older ones are noise.
+  for (const [k, v] of Object.entries(state.meta.notificationLog)) if (!k.startsWith('count:') || k === `count:${today}`) log[k] = v;
+  log[type] = key;
+  log[`count:${today}`] = String(Number(log[`count:${today}`] ?? 0) + 1);
+  return { state: { ...state, meta: { ...state.meta, notificationLog: log } }, events: [] };
 }

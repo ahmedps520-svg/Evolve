@@ -28,7 +28,7 @@ function serviceWorker(): Plugin {
     generateBundle(_options, bundle) {
       const publicFiles = listFiles(join(root, 'public')).filter(
         // iOS launch images are only read at install time; keep them out of the offline cache.
-        (file) => !file.startsWith('splash/') && file !== 'robots.txt',
+        (file) => !file.startsWith('splash/') && !file.startsWith('screenshots/') && file !== 'robots.txt',
       );
       const bundled = Object.keys(bundle).filter((file) => !file.endsWith('.map') && file !== 'sw.js');
       const precache = Array.from(new Set(['./', ...bundled, ...publicFiles])).sort();
