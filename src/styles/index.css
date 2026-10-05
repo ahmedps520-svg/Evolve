@@ -1,0 +1,618 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant light (&:where(.light, .light *));
+@custom-variant hc (&:where(.hc, .hc *));
+
+/* ───────────────────────── Fonts (self-hosted, offline) ───────────────────────── */
+
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('../assets/fonts/inter-latin-ext-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('../assets/fonts/inter-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Oxanium Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('../assets/fonts/oxanium-latin-ext-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxanium Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 200 800;
+  src: url('../assets/fonts/oxanium-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ───────────────────────── Theme tokens ───────────────────────── */
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-surface-4: var(--surface-4);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-ink: var(--accent-ink);
+  --color-coin: var(--coin);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-common: var(--rarity-common);
+  --color-uncommon: var(--rarity-uncommon);
+  --color-rare: var(--rarity-rare);
+  --color-epic: var(--rarity-epic);
+  --color-legendary: var(--rarity-legendary);
+  --color-mythic: var(--rarity-mythic);
+  --color-grp-int: var(--grp-int);
+  --color-grp-str: var(--grp-str);
+  --color-grp-spr: var(--grp-spr);
+  --color-grp-crf: var(--grp-crf);
+  --color-grp-cha: var(--grp-cha);
+  --color-grp-dis: var(--grp-dis);
+
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Oxanium Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 1.25rem;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+:root {
+  color-scheme: dark;
+
+  --bg: #06070a;
+  --bg-elevated: #0a0c10;
+  --surface: #0d0f14;
+  --surface-2: #13161d;
+  --surface-3: #1a1e27;
+  --surface-4: #232835;
+  --line: rgb(255 255 255 / 0.065);
+  --line-strong: rgb(255 255 255 / 0.12);
+  --fg: #eef0f6;
+  --muted: #9aa2b4;
+  --faint: #6b7385;
+
+  --coin: #f5c451;
+  --success: #3ddc97;
+  --warning: #fbbf24;
+  --danger: #ff5d6c;
+
+  --rarity-common: #a3aab9;
+  --rarity-uncommon: #4ade80;
+  --rarity-rare: #60a5fa;
+  --rarity-epic: #c084fc;
+  --rarity-legendary: #fbbf24;
+  --rarity-mythic: #fb7185;
+
+  /* Attribute groups — validated categorical palette (dark steps) */
+  --grp-int: #3987e5;
+  --grp-str: #d95926;
+  --grp-spr: #199e70;
+  --grp-crf: #c98500;
+  --grp-cha: #d55181;
+  --grp-dis: #008300;
+
+  --card-shadow: 0 1px 0 0 rgb(255 255 255 / 0.035) inset, 0 18px 40px -24px rgb(0 0 0 / 0.75);
+  --glow-strength: 1;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+.light {
+  color-scheme: light;
+
+  --bg: #f2f3f7;
+  --bg-elevated: #f7f8fa;
+  --surface: #ffffff;
+  --surface-2: #f6f7f9;
+  --surface-3: #eceef3;
+  --surface-4: #e1e4eb;
+  --line: rgb(12 14 22 / 0.08);
+  --line-strong: rgb(12 14 22 / 0.15);
+  --fg: #0c0f16;
+  --muted: #545c6c;
+  --faint: #858c9b;
+
+  --coin: #b97d06;
+  --success: #0e8f5a;
+  --warning: #b45309;
+  --danger: #dc2f45;
+
+  --rarity-common: #6b7280;
+  --rarity-uncommon: #16a34a;
+  --rarity-rare: #2563eb;
+  --rarity-epic: #9333ea;
+  --rarity-legendary: #d97706;
+  --rarity-mythic: #e11d48;
+
+  /* Attribute groups — validated categorical palette (light steps) */
+  --grp-int: #2a78d6;
+  --grp-str: #eb6834;
+  --grp-spr: #1baf7a;
+  --grp-crf: #eda100;
+  --grp-cha: #e87ba4;
+  --grp-dis: #008300;
+
+  --card-shadow: 0 1px 2px 0 rgb(12 14 22 / 0.04), 0 12px 32px -20px rgb(12 14 22 / 0.18);
+  --glow-strength: 0.55;
+}
+
+/* ── Accent palettes. `--accent-ink` is the accent tuned for text on the current surface. ── */
+
+:root,
+[data-accent='electric'] {
+  --accent: #8b7bff;
+  --accent-2: #4fa3ff;
+  --accent-fg: #ffffff;
+  --accent-ink: #a89dff;
+}
+.light[data-accent='electric'],
+.light:not([data-accent]) {
+  --accent: #5b47e8;
+  --accent-2: #2f7de1;
+  --accent-ink: #4a36d6;
+}
+
+[data-accent='cyan'] {
+  --accent: #22d3ee;
+  --accent-2: #60a5fa;
+  --accent-fg: #04161c;
+  --accent-ink: #5ee3f6;
+}
+.light[data-accent='cyan'] {
+  --accent: #0891b2;
+  --accent-2: #2563eb;
+  --accent-fg: #ffffff;
+  --accent-ink: #0e7490;
+}
+
+[data-accent='emerald'] {
+  --accent: #34d399;
+  --accent-2: #22d3ee;
+  --accent-fg: #03170f;
+  --accent-ink: #6ee7b7;
+}
+.light[data-accent='emerald'] {
+  --accent: #059669;
+  --accent-2: #0891b2;
+  --accent-fg: #ffffff;
+  --accent-ink: #047857;
+}
+
+[data-accent='amber'] {
+  --accent: #fbbf24;
+  --accent-2: #fb923c;
+  --accent-fg: #1c1302;
+  --accent-ink: #fcd34d;
+}
+.light[data-accent='amber'] {
+  --accent: #d97706;
+  --accent-2: #ea580c;
+  --accent-fg: #ffffff;
+  --accent-ink: #b45309;
+}
+
+[data-accent='crimson'] {
+  --accent: #fb5470;
+  --accent-2: #fb923c;
+  --accent-fg: #ffffff;
+  --accent-ink: #fd8a9c;
+}
+.light[data-accent='crimson'] {
+  --accent: #e11d48;
+  --accent-2: #ea580c;
+  --accent-ink: #be123c;
+}
+
+[data-accent='violet'] {
+  --accent: #c084fc;
+  --accent-2: #f472b6;
+  --accent-fg: #1a0526;
+  --accent-ink: #d8b4fe;
+}
+.light[data-accent='violet'] {
+  --accent: #9333ea;
+  --accent-2: #db2777;
+  --accent-fg: #ffffff;
+  --accent-ink: #7e22ce;
+}
+
+/* Premium themes (shop) */
+[data-accent='aurum'] {
+  --accent: #f2c66d;
+  --accent-2: #e8a33c;
+  --accent-fg: #1d1404;
+  --accent-ink: #f6d58f;
+}
+.dark[data-accent='aurum'] {
+  --bg: #080705;
+  --surface: #100e0b;
+  --surface-2: #17140f;
+  --surface-3: #201c15;
+  --surface-4: #2a251c;
+}
+.light[data-accent='aurum'] {
+  --accent: #b7791f;
+  --accent-2: #c2410c;
+  --accent-fg: #ffffff;
+  --accent-ink: #92600f;
+}
+
+[data-accent='synth'] {
+  --accent: #f472b6;
+  --accent-2: #22d3ee;
+  --accent-fg: #1f0414;
+  --accent-ink: #f9a8d4;
+}
+.dark[data-accent='synth'] {
+  --bg: #07050c;
+  --surface: #0e0b16;
+  --surface-2: #15111f;
+  --surface-3: #1d1829;
+  --surface-4: #272035;
+}
+.light[data-accent='synth'] {
+  --accent: #db2777;
+  --accent-2: #0891b2;
+  --accent-fg: #ffffff;
+  --accent-ink: #be185d;
+}
+
+[data-accent='mono'] {
+  --accent: #e7e9ee;
+  --accent-2: #9aa2b4;
+  --accent-fg: #0b0d12;
+  --accent-ink: #f4f5f8;
+}
+.light[data-accent='mono'] {
+  --accent: #1f2430;
+  --accent-2: #545c6c;
+  --accent-fg: #ffffff;
+  --accent-ink: #1f2430;
+}
+
+/* High contrast: stronger separation, brighter secondary text, no translucency tricks. */
+.hc {
+  --line: rgb(255 255 255 / 0.3);
+  --line-strong: rgb(255 255 255 / 0.5);
+  --muted: #d0d5e0;
+  --faint: #aab2c2;
+  --surface: #0b0c10;
+  --surface-2: #14161c;
+  --surface-3: #1e2129;
+}
+.hc.light {
+  --line: rgb(0 0 0 / 0.35);
+  --line-strong: rgb(0 0 0 / 0.6);
+  --muted: #2e3440;
+  --faint: #4b5260;
+  --surface: #ffffff;
+  --surface-2: #f4f5f7;
+  --surface-3: #e6e8ed;
+}
+
+/* ───────────────────────── Base ───────────────────────── */
+
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  body {
+    min-height: 100dvh;
+    background: var(--bg);
+    overscroll-behavior-y: none;
+    touch-action: manipulation;
+  }
+
+  #root {
+    isolation: isolate;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--accent) 35%, transparent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  .hc :focus-visible {
+    outline-width: 3px;
+  }
+
+  button,
+  [role='button'] {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 16px; /* prevents iOS zoom-on-focus */
+  }
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--surface-4) transparent;
+  }
+
+  img,
+  svg {
+    display: block;
+  }
+}
+
+/* ───────────────────────── Components & utilities ───────────────────────── */
+
+@utility num {
+  font-variant-numeric: tabular-nums;
+}
+
+@utility hud-label {
+  font-family: var(--font-display);
+  font-size: 0.6875rem;
+  line-height: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+@utility card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--card-shadow);
+}
+
+@utility card-inset {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 0.875rem;
+}
+
+@utility glass {
+  background: color-mix(in oklab, var(--bg) 78%, transparent);
+  backdrop-filter: saturate(160%) blur(18px);
+  -webkit-backdrop-filter: saturate(160%) blur(18px);
+}
+
+@utility safe-px {
+  padding-left: max(1rem, var(--safe-left));
+  padding-right: max(1rem, var(--safe-right));
+}
+
+@utility pt-safe {
+  padding-top: var(--safe-top);
+}
+
+@utility pb-safe {
+  padding-bottom: var(--safe-bottom);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* HUD corner brackets — a quiet game-interface detail for key panels. */
+@utility hud-corners {
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+    border-color: color-mix(in oklab, var(--accent) 70%, transparent);
+    opacity: 0.8;
+  }
+  &::before {
+    top: -1px;
+    left: -1px;
+    border-top: 1.5px solid;
+    border-left: 1.5px solid;
+    border-top-left-radius: var(--radius-card);
+  }
+  &::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 1.5px solid;
+    border-right: 1.5px solid;
+    border-bottom-right-radius: var(--radius-card);
+  }
+}
+
+/* Ambient page backdrop: a faint accent glow and grid, very low contrast. */
+.app-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(1100px 520px at 50% -180px, color-mix(in oklab, var(--accent) calc(11% * var(--glow-strength)), transparent), transparent 70%),
+    radial-gradient(700px 400px at 100% 0%, color-mix(in oklab, var(--accent-2) calc(6% * var(--glow-strength)), transparent), transparent 70%),
+    var(--bg);
+}
+.app-backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--fg) 2.2%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--fg) 2.2%, transparent) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse 80% 55% at 50% 0%, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 55% at 50% 0%, black 30%, transparent 75%);
+}
+.hc .app-backdrop::after {
+  display: none;
+}
+
+/* XP bar fill: two-tone accent with a slow sheen. */
+.xp-fill {
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  box-shadow: 0 0 calc(18px * var(--glow-strength)) -2px color-mix(in oklab, var(--accent) 70%, transparent);
+}
+.xp-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 0.28) 45%, transparent 60%);
+  background-size: 220% 100%;
+  animation: xp-sheen 3.2s var(--ease-out-expo) infinite;
+  border-radius: inherit;
+}
+@keyframes xp-sheen {
+  0% {
+    background-position: 180% 0;
+  }
+  60%,
+  100% {
+    background-position: -60% 0;
+  }
+}
+
+/* Rarity treatments */
+.rarity-glow {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--rarity) 45%, transparent),
+    0 0 calc(28px * var(--glow-strength)) -6px color-mix(in oklab, var(--rarity) 70%, transparent);
+}
+.mythic-sheen {
+  background: linear-gradient(115deg, #fb7185, #c084fc 30%, #60a5fa 55%, #34d399 75%, #fbbf24);
+  background-size: 200% 200%;
+  animation: mythic-shift 6s linear infinite;
+}
+@keyframes mythic-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: spin-slow 18s linear infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+.animate-pulse-ring {
+  animation: pulse-ring 1.8s var(--ease-out-expo) infinite;
+}
+
+@keyframes float-y {
+  50% {
+    transform: translateY(-4px);
+  }
+}
+.animate-float {
+  animation: float-y 4s ease-in-out infinite;
+}
+
+/* Reduced motion: honour the OS setting and the in-app override. */
+@media (prefers-reduced-motion: reduce) {
+  html:not(.motion-ok) *,
+  html:not(.motion-ok) *::before,
+  html:not(.motion-ok) *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+@media print {
+  .app-backdrop,
+  nav,
+  .no-print {
+    display: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .xp-fill {
+    background: Highlight;
+  }
+}

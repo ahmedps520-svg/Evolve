@@ -1,0 +1,80 @@
+import type { SpecialEventDef } from '@/types';
+
+/**
+ * Seasonal events. Add a new entry here to ship an event — no other code changes are required.
+ * Dates are local and recur every year.
+ */
+export const SPECIAL_EVENTS: SpecialEventDef[] = [
+  {
+    id: 'new_year',
+    name: 'New Year, New Level',
+    tagline: 'January event',
+    description: 'Complete 15 quests during the first two weeks of the year.',
+    start: { month: 1, day: 1 },
+    end: { month: 1, day: 14 },
+    metric: { type: 'quests' },
+    target: 15,
+    unitLabel: 'quests',
+    window: 'event',
+    rewards: { xp: 300, coins: 150, itemIds: ['badge:dawn_year'] },
+    sigil: 'sunrise',
+  },
+  {
+    id: 'spring_reset',
+    name: 'Spring Reset',
+    tagline: 'Spring event',
+    description: 'Be active on 10 different days during the event.',
+    start: { month: 3, day: 20 },
+    end: { month: 4, day: 3 },
+    metric: { type: 'activeDays' },
+    target: 10,
+    unitLabel: 'days',
+    window: 'event',
+    rewards: { xp: 300, coins: 150, itemIds: ['badge:bloom'] },
+    sigil: 'flower',
+  },
+  {
+    id: 'solstice',
+    name: 'Solstice Trials',
+    tagline: 'Summer event',
+    description: 'Earn XP in 6 different categories during the event.',
+    start: { month: 6, day: 15 },
+    end: { month: 7, day: 15 },
+    metric: { type: 'distinctCategories' },
+    target: 6,
+    unitLabel: 'categories',
+    window: 'event',
+    rewards: { xp: 300, coins: 150, itemIds: ['badge:sun'] },
+    sigil: 'sun',
+  },
+  {
+    id: 'the_grind',
+    name: 'The Grind',
+    tagline: 'October event',
+    description: 'Complete 10 quests in a single week this October.',
+    start: { month: 10, day: 1 },
+    end: { month: 10, day: 31 },
+    metric: { type: 'quests' },
+    target: 10,
+    unitLabel: 'quests',
+    window: 'week',
+    rewards: { xp: 250, coins: 150, itemIds: ['badge:grind', 'title:grinder', 'frame:grind', 'bg:harvest'] },
+    sigil: 'cog',
+  },
+  {
+    id: 'winter_focus',
+    name: 'Winter Focus',
+    tagline: 'December event',
+    description: 'Complete 8 focus sessions before the holidays.',
+    start: { month: 12, day: 1 },
+    end: { month: 12, day: 24 },
+    metric: { type: 'focusSessions' },
+    target: 8,
+    unitLabel: 'sessions',
+    window: 'event',
+    rewards: { xp: 300, coins: 150, itemIds: ['badge:snow'] },
+    sigil: 'snowflake',
+  },
+];
+
+export const EVENT_MAP = Object.fromEntries(SPECIAL_EVENTS.map((e) => [e.id, e])) as Record<string, SpecialEventDef>;
