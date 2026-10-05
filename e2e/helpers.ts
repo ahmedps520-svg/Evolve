@@ -55,10 +55,12 @@ export async function logActivity(page: Page, { category, minutes }: { category:
 export async function dismissCelebrations(page: Page) {
   const dialogs = page.getByRole('dialog').filter({ has: page.getByRole('button', { name: 'Continue' }) });
   for (let i = 0; i < 8; i++) {
-    await page.waitForTimeout(300);
-    if (!(await dialogs.count())) return;
-    const name = await dialogs.first().getAttribute('aria-label');
-    await dialogs.first().getByRole('button', { name: 'Continue' }).click();
+    await page.waitForTimeout(350);
+    const dialog = dialogs.first();
+    // A dialog that is already animating out may vanish between these calls.
+    if (!(await dialog.isVisible().catch(() => false))) return;
+    const name = await dialog.getAttribute('aria-label', { timeout: 1000 }).catch(() => null);
+    await dialog.getByRole('button', { name: 'Continue' }).click({ timeout: 2000 }).catch(() => undefined);
     if (name) await expect(page.getByRole('dialog', { name, exact: true })).toHaveCount(0);
   }
 }

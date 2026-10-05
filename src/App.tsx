@@ -1,5 +1,5 @@
 import { AnimatePresence, m } from 'framer-motion';
-import { lazy, Suspense, useEffect, type ReactNode } from 'react';
+import { lazy, Suspense, useEffect, useRef, type ReactNode } from 'react';
 import { MotionProvider } from '@/lib/motion';
 import { navigate, useRoute } from '@/lib/router';
 import { decodeCard } from '@/lib/social';
@@ -185,9 +185,19 @@ function Router() {
     }
   }, [onboarded, status]);
 
+  // #/demo loads the demo hero once, then lands on the dashboard — unless the player has already moved on.
+  const enteringDemo = useRef(false);
   useEffect(() => {
-    if (top === 'demo' && status === 'ready' && mode !== 'demo') void enterDemo().then(() => navigate('/home', { replace: true }));
-    else if (top === 'demo' && mode === 'demo') navigate('/home', { replace: true });
+    if (top !== 'demo' || status !== 'ready' || enteringDemo.current) return;
+    if (mode === 'demo') {
+      navigate('/home', { replace: true });
+      return;
+    }
+    enteringDemo.current = true;
+    void enterDemo().finally(() => {
+      enteringDemo.current = false;
+      if (location.hash.startsWith('#/demo')) navigate('/home', { replace: true });
+    });
   }, [top, status, mode, enterDemo]);
 
   if (status === 'idle' || status === 'loading') return <Splash />;
