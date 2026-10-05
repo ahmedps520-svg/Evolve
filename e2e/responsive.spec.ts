@@ -29,3 +29,13 @@ test.describe('tablet', () => {
     await expectNoSideScroll(page);
   });
 });
+
+test('switching sections starts the new page at the top', async ({ page }) => {
+  await onboard(page);
+  await page.goto('#/settings');
+  await page.getByRole('heading', { name: 'About' }).scrollIntoViewIfNeeded();
+  expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(200);
+  await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: /home/i }).click();
+  await expect(page).toHaveURL(/#\/home/);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+});

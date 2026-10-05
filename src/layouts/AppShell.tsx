@@ -249,7 +249,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           )}
         >
           <DemoBanner />
-          <AnimatePresence mode="wait" initial={false}>
+          {/* A new section starts at the top, once the previous page has faded out. */}
+          <AnimatePresence mode="wait" initial={false} onExitComplete={() => window.scrollTo({ top: 0, left: 0, behavior: 'instant' })}>
             <m.div key={active} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}>
               {children}
             </m.div>

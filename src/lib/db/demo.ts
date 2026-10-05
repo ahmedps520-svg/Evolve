@@ -6,7 +6,7 @@
  */
 import type { CategoryId, DateKey, GameState, JournalEntry, PartyMember, Quest } from '@/types';
 import { emptyState } from '@/data/defaults';
-import { addDays, diffDays, parseDateKey, startOfDay, toDateKey } from '@/lib/date';
+import { addDays, daysInMonth, diffDays, parseDateKey, startOfDay, toDateKey } from '@/lib/date';
 import { createRng } from '@/lib/random';
 import { blankQuest, questsForToday } from '@/lib/engine/quests';
 import {
@@ -142,7 +142,7 @@ function simulate(plan: DemoPlan): GameState {
       s = createGoal(s, { title: 'Learn Spanish', description: 'Hold a real conversation on my trip in spring.', target: 'Reach conversational level', category: 'learning', deadline: '2026-12-31' }, atRef(key, 21, 30)).state;
       s = createGoal(s, { title: 'Run a 10K', description: 'Build up slowly — no injuries.', target: 'Finish a 10K race', category: 'running', deadline: '2027-03-15', milestones: [{ title: 'Run 3 km without stopping', xpReward: 75 }, { title: 'Run 5 km', xpReward: 100 }, { title: 'Run 8 km', xpReward: 125 }, { title: 'Race day: 10 km', xpReward: 200 }] }, atRef(key, 21, 35)).state;
     }
-    if (day === 20) s = { ...s, party: demoParty(atRef(key, 21, 0), currentWeekKey(key, s.settings.weekStartsOn)) };
+    if (day === 20) s = { ...s, party: demoParty(atRef(key, 21, 0), s.settings.weekStartsOn) };
     if (day === 34) {
       const spanishGoal = s.goals.find((g) => g.title === 'Learn Spanish');
       if (spanishGoal) s = setGoalProgress(s, spanishGoal.id, 42, atRef(key, 21, 40)).state;
@@ -256,10 +256,18 @@ function settleToday(s: GameState, now: number): GameState {
   };
 }
 
-function demoParty(now: number, weekKey: DateKey): PartyMember[] {
-  const month = toDateKey(now).slice(0, 7);
+function demoParty(now: number, weekStartsOn: 0 | 1): PartyMember[] {
   const ago = (h: number) => now - h * 3_600_000;
-  const member = (m: Omit<PartyMember, 'addedAt' | 'updatedAt' | 'weekKey' | 'monthKey'>): PartyMember => ({ ...m, weekKey, monthKey: month, addedAt: ago(24 * 20), updatedAt: m.cardAt });
+  // Each card reflects the week and month it was shared in; weekly and monthly totals are scaled to
+  // how far into that period the friend was, so a Monday never shows a full week of XP.
+  const member = (m: Omit<PartyMember, 'addedAt' | 'updatedAt' | 'weekKey' | 'monthKey'>): PartyMember => {
+    const day = toDateKey(m.cardAt);
+    const weekKey = currentWeekKey(day, weekStartsOn);
+    const weekShare = (diffDays(weekKey, day) + 0.6) / 7;
+    const monthShare = (Number(day.slice(8, 10)) - 0.4) / daysInMonth(day);
+    const scale = (v: number | null, share: number) => (v === null ? null : Math.round((v * share) / 10) * 10);
+    return { ...m, weeklyXP: scale(m.weeklyXP, weekShare), monthlyXP: scale(m.monthlyXP, monthShare), weekKey, monthKey: day.slice(0, 7), addedAt: ago(24 * 20), updatedAt: m.cardAt };
+  };
   return [
     member({ id: 'demo-sam', name: 'Sam', classId: 'athlete', avatar: { sigil: 'sigil:bolt', background: 'bg:ember', frame: 'frame:hex', aura: 'aura:glow' }, titleId: 'title:athlete', level: 16, totalXP: 10_150, weeklyXP: 1_280, monthlyXP: 2_940, questsCompleted: 61, achievements: 15, streak: 9, cardAt: ago(5) }),
     member({ id: 'demo-maya', name: 'Maya', classId: 'scholar', avatar: { sigil: 'sigil:tome', background: 'bg:nebula', frame: 'frame:cyber', aura: 'aura:pulse' }, titleId: 'title:scholar', level: 21, totalXP: 17_820, weeklyXP: 1_960, monthlyXP: 4_480, questsCompleted: 118, achievements: 24, streak: 31, cardAt: ago(11) }),
@@ -280,11 +288,21 @@ export function buildDemoState(now: number, plan: DemoPlan = DEFAULT_PLAN): Game
   s = {
     ...s,
     // Friends' cards are "fresh" relative to the real date.
-    party: demoParty(now, weekKey),
+    party: demoParty(now, s.settings.weekStartsOn),
     challenges: [
-      { id: uid('c_'), opponentId: 'demo-sam', opponentName: 'Sam', metric: 'weekly_xp', weekKey, reward: 250, createdAt: now - 2 * 86_400_000, status: 'active', resolvedAt: null, myScore: null, theirScore: null },
+      { id: uid('c_'), opponentId: 'demo-sam', opponentName: 'Sam', metric: 'weekly_xp', weekKey, reward: 250, createdAt: Math.max(startOfDay(weekKey), now - 2 * 86_400_000), status: 'active', resolvedAt: null, myScore: null, theirScore: null },
     ],
     meta: { ...s.meta, lastSummaryDate: today },
+  };
+  // Show off a little: the hero wears what they've earned.
+  const owned = new Set(s.meta.inventory);
+  const pick = (id: string, fallback: string) => (owned.has(id) ? id : fallback);
+  const p = s.profile!;
+  s.profile = {
+    ...p,
+    titleId: owned.has('title:consistent') ? 'title:consistent' : p.titleId,
+    badgeId: owned.has('badge:flame') ? 'badge:flame' : p.badgeId,
+    avatar: { ...p.avatar, frame: pick('frame:runic', p.avatar.frame), background: pick('bg:abyss', p.avatar.background), aura: pick('aura:glow', p.avatar.aura) },
   };
   // Bring the world up to date for the real "now" (current week, today's board, unlocks).
   return syncDay(s, now).state;

@@ -265,6 +265,25 @@ describe('streaks and rest days', () => {
     expect(s.profile!.currentStreak).toBe(4);
   });
 
+  it('retires the streak-reset notice once a new 3-day streak begins', () => {
+    let s = onboard(at(2026, 10, 1, 9));
+    s = logActivity(s, { category: 'reading', duration: 15 }, at(2026, 10, 1, 20)).state;
+    s = logActivity(s, { category: 'reading', duration: 15 }, at(2026, 10, 2, 20)).state;
+    // Miss Oct 3 and Oct 4: too long ago for a rest day to cover.
+    s = syncDay(s, at(2026, 10, 5, 9)).state;
+    expect(s.meta.streakReset?.seen).toBe(false);
+    for (const d of [5, 6]) {
+      s = syncDay(s, at(2026, 10, d, 8)).state;
+      s = logActivity(s, { category: 'reading', duration: 15 }, at(2026, 10, d, 20)).state;
+    }
+    expect(s.profile!.currentStreak).toBe(2);
+    expect(s.meta.streakReset).not.toBeNull();
+    s = syncDay(s, at(2026, 10, 7, 8)).state;
+    s = logActivity(s, { category: 'reading', duration: 15 }, at(2026, 10, 7, 20)).state;
+    expect(s.profile!.currentStreak).toBe(3);
+    expect(s.meta.streakReset).toBeNull();
+  });
+
   it('limits rest days per week and refuses them on active days', () => {
     let s = onboard(at(2026, 10, 5, 9), 'hardcore'); // 1 rest day per week
     expect(canTakeRestDay(s, '2026-10-05', at(2026, 10, 5, 10)).ok).toBe(true);

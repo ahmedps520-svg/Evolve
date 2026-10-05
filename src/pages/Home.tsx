@@ -210,7 +210,7 @@ function TodayStatus() {
           Any quest or activity today keeps your {profile.currentStreak}-day streak going.
         </p>
       )}
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-2 xl:grid-cols-4">
         <Button variant="secondary" icon="timer" onClick={() => openSheet({ type: 'focus' })}>
           Focus
         </Button>

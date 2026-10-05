@@ -79,6 +79,8 @@ export function updateStreak(ctx: EngineContext): void {
   const longest = Math.max(profile.longestStreak, value);
   if (value !== profile.currentStreak || longest !== profile.longestStreak) ctx.setProfile({ currentStreak: value, longestStreak: longest });
   if (value > profile.currentStreak) ctx.emit({ type: 'streak', kind: isStreakMilestone(value) ? 'milestone' : 'increase', value });
+  // A new 3-day streak is a comeback: the "streak reset" notice has done its job.
+  if (ctx.meta.streakReset && value >= 3) ctx.setMeta({ streakReset: null });
 }
 
 /** Unlock every achievement whose condition is now met, paying out its rewards. */

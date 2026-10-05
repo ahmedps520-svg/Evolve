@@ -39,6 +39,10 @@ describe('demo hero', () => {
       expect(s.activities.every((a) => a.timestamp <= now)).toBe(true);
       expect(s.transactions.every((x) => x.timestamp <= now)).toBe(true);
       expect(s.meta.lastSeenDate).toBe(toDateKey(now));
+      // No stale "streak reset" card on a 14-day streak, and the hero shows off earned cosmetics.
+      expect(s.meta.streakReset).toBeNull();
+      expect(s.profile!.titleId).toBe('title:consistent');
+      expect(s.meta.inventory).toEqual(expect.arrayContaining([s.profile!.avatar.frame, s.profile!.avatar.background, s.profile!.avatar.aura, s.profile!.badgeId]));
       // Stable: syncing again changes nothing.
       const again = syncDay(s, now + 60_000);
       expect(again.events).toHaveLength(0);

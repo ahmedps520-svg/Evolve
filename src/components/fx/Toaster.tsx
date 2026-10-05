@@ -89,7 +89,19 @@ const ToastView = memo(function ToastView({ t }: { t: Toast }) {
             {t.title}
             {t.rarity && <span className="ml-1.5 text-faint">· {RARITY_LABEL[t.rarity]}</span>}
           </p>
-          {t.message && <p className="mt-0.5 truncate text-sm font-medium text-fg">{t.message}</p>}
+          {t.message && <p className={cn('mt-0.5 text-sm font-medium text-fg', t.kind === 'error' ? 'line-clamp-3' : 'line-clamp-2')}>{t.message}</p>}
+          {t.action && (
+            <button
+              type="button"
+              onClick={() => {
+                t.action!.run();
+                dismiss(t.id);
+              }}
+              className="-ml-2 mt-1 h-8 rounded-lg px-2 font-display text-[11px] font-semibold tracking-[0.12em] text-accent-ink uppercase transition hover:bg-surface-4"
+            >
+              {t.action.label}
+            </button>
+          )}
         </div>
         {(!!t.xp || !!t.coins) && (
           <div className="flex shrink-0 flex-col items-end gap-0.5 pr-1">
@@ -100,18 +112,6 @@ const ToastView = memo(function ToastView({ t }: { t: Toast }) {
               </span>
             )}
           </div>
-        )}
-        {t.action && (
-          <button
-            type="button"
-            onClick={() => {
-              t.action!.run();
-              dismiss(t.id);
-            }}
-            className="h-9 shrink-0 rounded-lg px-3 font-display text-xs font-semibold tracking-[0.1em] text-accent-ink uppercase transition hover:bg-surface-4"
-          >
-            {t.action.label}
-          </button>
         )}
         <button type="button" onClick={() => dismiss(t.id)} aria-label="Dismiss notification" className="grid size-8 shrink-0 place-items-center rounded-lg text-faint transition hover:bg-surface-4 hover:text-fg">
           <Icon name="x" size={15} />

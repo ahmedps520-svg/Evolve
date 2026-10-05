@@ -41,10 +41,10 @@ export function BossCard({ challenge, progress, daysLeft, compact, linkTo }: { c
         </div>
         <div className="min-w-0 flex-1">
           <p className="hud-label !text-danger">{defeated ? 'Boss defeated' : 'Weekly boss'}</p>
-          <h3 className="truncate font-display text-[17px] font-bold tracking-wide text-fg">{boss.name}</h3>
-          {!compact && boss.lore && <p className="truncate text-[13px] text-muted">{boss.lore}</p>}
+          <h3 className="font-display text-[17px] leading-snug font-bold tracking-wide text-balance text-fg">{boss.name}</h3>
+          {!compact && boss.lore && <p className="text-[13px] text-muted">{boss.lore}</p>}
         </div>
-        <span className="shrink-0 rounded-lg border border-line bg-surface-2 px-2 py-1 text-[11px] font-medium text-muted">{daysLeft === 1 ? 'Last day' : `${daysLeft} days left`}</span>
+        <span className="shrink-0 self-start rounded-lg border border-line bg-surface-2 px-2 py-1 text-[11px] font-medium text-muted">{daysLeft === 1 ? 'Last day' : `${daysLeft} days left`}</span>
       </div>
       <div className="mt-4">
         <div className="mb-1.5 flex items-baseline justify-between text-xs">
