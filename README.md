@@ -8,6 +8,8 @@ are part of the game.
 It's a mobile-first Progressive Web App. It installs on iPhone, iPad, Android and desktop, works
 fully offline, and keeps everything on your device.
 
+**Play it:** https://ahmedps520-svg.github.io/Evolve/
+
 ![Evolve dashboard on desktop](docs/screenshots/desktop-home.jpg)
 
 | Quest board | Streaks | Light theme |
@@ -84,6 +86,10 @@ npm run preview      # serve the production build (service worker enabled)
 the URL hash, so it works on any static host at any path: GitHub Pages, Netlify, Vercel,
 Cloudflare Pages, S3 or a USB stick behind a web server. Serve it over HTTPS (or `localhost`) for the
 service worker and install prompt.
+
+This repository deploys itself: every push to `main` runs `.github/workflows/deploy.yml`, which
+builds the app and publishes `dist/` to the `gh-pages` branch. GitHub Pages serves that branch at
+https://ahmedps520-svg.github.io/Evolve/ (Settings → Pages → Deploy from a branch → `gh-pages`, `/ (root)`).
 
 ### Installing the app
 
