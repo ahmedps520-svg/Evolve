@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" class="dark" data-accent="electric">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Evolve — Turn your real life into a game</title>
+    <meta
+      name="description"
+      content="Evolve turns studying, exercise, reading and everyday habits into an RPG. Earn XP, level up, complete quests, unlock achievements and keep streaks. Private, offline-first and free."
+    />
+    <meta name="theme-color" content="#06070a" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="application-name" content="Evolve" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Evolve" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta property="og:title" content="Evolve — Real life. Now with XP." />
+    <meta property="og:description" content="Turn your goals, habits and daily activities into an RPG progression system." />
+    <meta property="og:type" content="website" />
+
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="icon" href="./icons/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="./icons/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+
+    <!-- iOS launch screens (portrait) -->
+    <link rel="apple-touch-startup-image" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3)" href="./splash/apple-splash-1320-2868.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3)" href="./splash/apple-splash-1290-2796.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3)" href="./splash/apple-splash-1206-2622.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3)" href="./splash/apple-splash-1179-2556.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)" href="./splash/apple-splash-1170-2532.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3)" href="./splash/apple-splash-1284-2778.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" href="./splash/apple-splash-1125-2436.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" href="./splash/apple-splash-828-1792.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" href="./splash/apple-splash-750-1334.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2)" href="./splash/apple-splash-1640-2360.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" href="./splash/apple-splash-1668-2388.png" />
+    <link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" href="./splash/apple-splash-2048-2732.png" />
+
+    <style>html{color:#eef0f6;background:#06070a}html.light{color:#0c0f16;background:#f2f3f7}#boot{place-items:center;display:grid;position:fixed;inset:0}#boot svg{opacity:.9;width:56px;height:56px;animation:1.6s ease-in-out infinite boot-pulse}@keyframes boot-pulse{50%{opacity:.35;transform:scale(.94)}}@media (prefers-reduced-motion:reduce){#boot svg{animation:none}}</style>
+    <script>
+      // Apply the saved appearance before first paint so there is no theme flash.
+      (function () {
+        try {
+          var a = JSON.parse(localStorage.getItem('evolve:appearance') || '{}');
+          var t = a.theme || 'dark';
+          var dark = t === 'system' ? matchMedia('(prefers-color-scheme: dark)').matches : t !== 'light';
+          var r = document.documentElement;
+          r.classList.toggle('dark', dark);
+          r.classList.toggle('light', !dark);
+          if (a.accent) r.setAttribute('data-accent', a.accent);
+          if (a.highContrast) r.classList.add('hc');
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute('content', dark ? '#06070a' : '#f2f3f7');
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" crossorigin src="./assets/index-CTz16kgZ.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/Button-3LIkZgPO.js">
+    <link rel="modulepreload" crossorigin href="./assets/single-value-9PSxCYUy.js">
+    <link rel="modulepreload" crossorigin href="./assets/Display-BAaALe7U.js">
+    <link rel="modulepreload" crossorigin href="./assets/AnimatePresence-32BIJlNi.js">
+    <link rel="modulepreload" crossorigin href="./assets/motion-DQhQCURZ.js">
+    <link rel="modulepreload" crossorigin href="./assets/Avatar-D4SCiT78.js">
+    <link rel="modulepreload" crossorigin href="./assets/attributes-D_zuEc82.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-Dow9A8ib.css">
+  </head>
+  <body>
+    <div id="root">
+      <div id="boot" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none">
+          <path d="M32 6 54 19v26L32 58 10 45V19L32 6Z" stroke="currentColor" stroke-width="3" stroke-linejoin="round" />
+          <path d="M22 38 32 22l10 16" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+    </div>
+    <noscript>
+      <p style="padding: 24px; font-family: system-ui, sans-serif">Evolve needs JavaScript enabled to run.</p>
+    </noscript>
+  </body>
+</html>
